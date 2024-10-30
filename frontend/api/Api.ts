@@ -37,7 +37,7 @@ instance.interceptors.response.use(
       failCount++;
       api.refreshToken(user!.refreshToken);
     }
-  },
+  }
 );
 
 function parseData(data: string) {
@@ -52,7 +52,7 @@ const api = {
     method: string,
     resource: string,
     data: any | null | undefined,
-    config: {} | undefined,
+    config: {} | undefined
   ) {
     return instance({
       method: method,
@@ -154,6 +154,31 @@ const api = {
   },
   refreshToken(token: string) {
     return instance.post(`refreshToken/token?token=${token}`);
+  },
+  searchBookmarksByTag(tag: string) {
+    return instance.get("search/tags", {
+      data: {
+        tag: tag,
+      },
+    });
+  },
+
+  // Search bookmarks by title
+  searchBookmarksByTitle(title: string) {
+    return instance.get("search/title", {
+      data: {
+        title: title,
+      },
+    });
+  },
+
+  // Search bookmarks by text
+  searchBookmarksByText(text: string) {
+    return instance.get("search/text", {
+      data: {
+        text: text,
+      },
+    });
   },
 };
 

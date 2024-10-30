@@ -8,6 +8,8 @@ import ImportModal from "@components/Import/ImportModal";
 import Export from "./Export";
 import Image from "next/image";
 import navbarView from "styles/navbar.module.scss";
+import API from "../../api/Api";
+import React, { useState } from "react";
 
 const GlobalNavbar: React.FC = () => {
   const userAuth = useAuth();
@@ -44,6 +46,23 @@ const GlobalNavbar: React.FC = () => {
     authService.logout();
     router.push("/account/login");
   };
+  const [searchTag, setSearchTag] = useState<string>("");
+
+  const handleSearch = async () => {
+    try {
+      const response = await API.searchBookmarksByTag(searchTag);
+      console.log("Search results:", response);
+    } catch (error) {
+      console.error("Error searching bookmarks:", error);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSearch();
+    }
+  };
 
   return (
     <Navbar
@@ -71,10 +90,14 @@ const GlobalNavbar: React.FC = () => {
               type="text"
               className={`${navbarView.searchBarInput}`}
               placeholder="Search"
+              value={searchTag}
+              onChange={(e) => setSearchTag(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
             <button
               className={`btn ms-2 ${navbarView.searchBarBtn}`}
-              type="submit"
+              type="button"
+              onClick={handleSearch}
             >
               <i className="bi bi-search"></i>
             </button>
